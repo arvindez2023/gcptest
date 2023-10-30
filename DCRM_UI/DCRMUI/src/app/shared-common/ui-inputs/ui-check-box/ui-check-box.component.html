@@ -1,5 +1,0 @@
-<input type="checkbox" [formControl]="control" [ngClass]="{ 'is-invalid': submitted && control.errors }" > 
-<ng-container *ngIf="label"><span class="ml-1">{{ label }}</span></ng-container>
-<ng-container *ngFor="let error of control.errors | errorKeys">
-  <span *ngIf="submitted" class="invalid-class"> {{ messages[error] }}</span>
-</ng-container>
