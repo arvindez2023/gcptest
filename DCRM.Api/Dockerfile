@@ -15,12 +15,12 @@ WORKDIR /src
 
 # Build App
 COPY . .
-RUN dotnet restore "DCRM.Api/DCRM.Api.csproj" --ignore-failed-sources
-RUN dotnet build "DCRM.Api/DCRM.Api.csproj" -c Release -o /app/build
+RUN dotnet restore "DCRM.Api.csproj" --ignore-failed-sources
+RUN dotnet build "DCRM.Api.csproj" -c Release -o /app/build
 
 #Publish App
 FROM build AS publish
-RUN dotnet publish "DCRM.Api/DCRM.Api.csproj" -c Release -o /app/publish
+RUN dotnet publish "DCRM.Api.csproj" -c Release -o /app/publish
 
 #Copy App files
 FROM base AS final
