@@ -7,21 +7,22 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
+EXPOSE 8080
+ENV ASPNETCORE_URLS=http://*:8080
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["DCRM.Api/DCRM.Api.csproj", "DCRM.Api/"]
-COPY ["DCRM.Common/DCRM.Common.csproj", "DCRM.Common/"]
-COPY ["DCRM.Service/DCRM.Service.csproj", "DCRM.Service/"]
-COPY ["DCRM.Repository/DCRM.Repository.csproj", "DCRM.Repository/"]
-RUN dotnet restore "DCRM.Api/DCRM.Api.csproj"
+
+# Build App
 COPY . .
-WORKDIR "/src/DCRM.Api"
+RUN dotnet restore "DCRM.Api/DCRM.Api.csproj" --ignore-failed-sources
 RUN dotnet build "DCRM.Api.csproj" -c Release -o /app/build
 
+#Publish App
 FROM build AS publish
-RUN dotnet publish "DCRM.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "DCRM.Api/DCRM.Api.csproj" -c Release -o /app/publish
 
+#Copy App files
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
